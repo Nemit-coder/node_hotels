@@ -14,6 +14,7 @@
 var express = require('express');
 var app = express();
 const db = require('./db');
+require('dotenv').config();
 
 const bodyParser = require('body-parser');
 app.use(bodyParser.json());
@@ -43,4 +44,6 @@ const menuitemRouter = require('./routes/menuitemRoutes');
 app.use('/person', personRouter);
 app.use('/menu', menuitemRouter);
 
-app.listen(5000, () => {console.log('Server Started Sucessfully');})
+const PORT = process.env.PORT || 5000
+
+app.listen(PORT, () => {console.log('Server Started Sucessfully');})
