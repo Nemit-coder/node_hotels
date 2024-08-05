@@ -18,6 +18,7 @@ require('dotenv').config();
 
 const bodyParser = require('body-parser');
 app.use(bodyParser.json());
+const PORT = process.env.PORT || 5000
 
 
 app.get('/', function(req, res) {
@@ -43,7 +44,5 @@ const menuitemRouter = require('./routes/menuitemRoutes');
 // Use the routers
 app.use('/person', personRouter);
 app.use('/menu', menuitemRouter);
-
-const PORT = process.env.PORT || 5000
 
 app.listen(PORT, () => {console.log('Server Started Sucessfully');})
