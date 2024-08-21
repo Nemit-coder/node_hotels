@@ -15,16 +15,28 @@ var express = require('express');
 var app = express();
 const db = require('./db');
 require('dotenv').config();
+const passport = require('./auth');
 
 const bodyParser = require('body-parser');
 app.use(bodyParser.json());
 const PORT = process.env.PORT || 5000
 
+// Middleware Function
+const logRequest = (req, res, next) => {
+    console.log(`[${new Date().toLocaleString()}] Request made to : ${req.originalUrl}`);
+    next();
+}
+app.use(logRequest);
 
+
+app.use(passport.initialize());
+const localAuthMiddleware = passport.authenticate('local',{session: false});
 app.get('/', function(req, res) {
     res.send("Welcome to menu")
 })
 
+
+// Extra Request Handlers
 app.get('/vadapav', function(req, res) {
     var variety = {
         vadapav1: "simple",
@@ -40,9 +52,10 @@ app.get('/Samosa', function(req, res) {
 //Import the router files
 const personRouter = require('./routes/personRoutes');
 const menuitemRouter = require('./routes/menuitemRoutes');
+// const passport = require('passport');
 
 // Use the routers
-app.use('/person', personRouter);
-app.use('/menu', menuitemRouter);
+app.use('/person',localAuthMiddleware, personRouter);
+app.use('/menu', localAuthMiddleware ,menuitemRouter);
 
 app.listen(PORT, () => {console.log('Server Started Sucessfully');})
